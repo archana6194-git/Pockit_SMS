@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#8ec5ff"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Pockit">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pockit – Expense Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e8f2ff;--card:rgba(255,255,255,.76);--tx:#2f4268;--mu:#7f93b8;--cr:#3fb59a;--db:#ee8aa3;--ac1:#8ec5ff;--ac2:#b8b5ff;--ac3:#ffd6a5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[data-theme=cotton]{--bg:#fff4ea;--card:rgba(255,255,255,.85);--tx:#2d2250;--mu:#8a7fae;--cr:#12b886;--db:#f0457a;--ac1:#b57cff;--ac2:#ff7eb6}
+[data-theme=lofi]{--bg:#f1eafc;--card:rgba(255,255,255,.72);--tx:#4a3f6b;--mu:#9588b8;--cr:#4fb58f;--db:#ec8aa5;--ac1:#b9a2f5;--ac2:#f7a8c8;--ac3:#ffc9a3}
+[data-theme=lofi] .btn,[data-theme=lofi] .fab,[data-theme=lofi] #toast,[data-theme=lofi] .tog .db.on{color:#3d3160}
+[data-theme=lofi] .mini[style*=gradient]{color:#3d3160!important}
+[data-theme=lofi] .card,[data-theme=lofi] .mini{box-shadow:0 8px 24px rgba(155,130,205,.18)}
+[data-theme=lofi] .fab{box-shadow:0 8px 22px rgba(247,168,200,.55)}
+[data-theme=midnight] .btn,[data-theme=midnight] .fab,[data-theme=midnight] #toast,[data-theme=midnight] .tog .db.on{color:#1f3157}
+[data-theme=midnight] .mini[style*=gradient]{color:#1f3157!important}
+[data-theme=midnight] .card,[data-theme=midnight] .mini{box-shadow:0 8px 24px rgba(110,150,210,.2)}
+[data-theme=midnight] .fab{box-shadow:0 8px 22px rgba(142,197,255,.6)}
+[data-theme=mint]{--bg:#e8fff6;--card:rgba(255,255,255,.85);--tx:#12324a;--mu:#5d8a96;--cr:#0ca678;--db:#e8590c;--ac1:#20c997;--ac2:#4cc9f0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font-family:'Quicksand',ui-rounded,system-ui,sans-serif;font-weight:600}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+#app{max-width:520px;margin:0 auto;height:100%;display:flex;flex-direction:column;position:relative}
+#main{flex:1;overflow-y:auto;padding:14px 16px 110px}
+h1,h2,h3{margin:0;font-weight:900}h2{font-size:20px}h3{font-size:16px}
+.hero{border-radius:24px;padding:16px;margin-bottom:12px;background:linear-gradient(135deg,var(--ac1),var(--ac2));color:var(--tx);box-shadow:0 8px 24px rgba(0,0,0,.12)}.hero .big{font-size:34px}
+.hs{flex:1;background:rgba(255,255,255,.5);border-radius:14px;padding:8px 10px;font-size:12px}.hs b{display:block;font-size:16px}
+.pills{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}.pill{flex:none;display:inline-flex;align-items:center;gap:4px;padding:6px 11px;border-radius:20px;background:var(--card);font-size:13px;font-weight:800;white-space:nowrap;border:0;color:var(--tx);font-family:inherit}.pill.db{color:var(--db)}.pill.warn{color:#d9822b}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;flex:none}.lg{font-size:13px;margin:5px 0}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.tile{background:var(--card);border-radius:18px;padding:10px;text-align:center;font-size:12px;color:var(--mu)}.tile b{display:block;font-size:16px;color:var(--tx);margin-top:2px}.tile .e{font-size:20px}
+.act2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.act2 button{border:0;border-radius:18px;padding:14px 8px;font:inherit;font-weight:900;font-size:15px;background:var(--card);color:var(--tx);display:flex;flex-direction:column;align-items:center;gap:4px}.act2 button span{font-size:26px}.act2 .pr{background:linear-gradient(135deg,var(--ac1),var(--ac2))}
+.card{background:var(--card);backdrop-filter:blur(14px);border-radius:20px;padding:14px;margin-bottom:12px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.row{display:flex;align-items:center;gap:10px}.sp{justify-content:space-between}
+.mu{color:var(--mu);font-size:13px}.cr{color:var(--cr)}.db{color:var(--db)}
+.big{font-size:40px;font-weight:900;letter-spacing:-1px}
+.grid3{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;margin-bottom:14px}
+.mini{background:var(--card);border-radius:20px;padding:12px 8px;text-align:center}
+.mini b{display:block;font-size:17px;font-weight:900;margin-top:2px}
+.btn{border:0;border-radius:18px;padding:14px 18px;font:inherit;font-weight:900;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--ac1),var(--ac2));width:100%}
+.btn.ghost{background:var(--card);color:var(--tx)}.btn.red{background:var(--db)}
+.nav{position:absolute;bottom:0;left:0;right:0;display:flex;background:var(--bg);border-top:1px solid var(--card);padding:8px 4px 8px}
+.nav button{flex:1;border:0;background:none;color:var(--mu);font:inherit;font-size:11px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button span{font-size:19px}.nav .on{color:var(--tx)}.nav .on span{transform:scale(1.2)}
+.fab{position:absolute;right:18px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:62px;height:62px;border-radius:50%;border:0;font-size:34px;color:#fff;background:linear-gradient(135deg,var(--ac1),var(--ac2));box-shadow:0 8px 24px rgba(255,79,163,.5);z-index:5}
+.fab:active{transform:scale(.9) rotate(90deg)}
+.fab.mic{width:50px;height:50px;font-size:22px;right:24px;bottom:calc(148px + env(safe-area-inset-bottom,0px))}.fab.mic:active{transform:scale(.9)}
+.ent{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:15px}.ent .mu{font-size:12px}
+.ico{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:17px;flex:none}
+.ent .g{flex:1;min-width:0}.ent .g div:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+input,select{width:100%;background:var(--card);border:2px solid transparent;border-radius:16px;padding:13px;font:inherit;font-weight:800;color:var(--tx);margin-top:6px}
+input:focus,select:focus{outline:none;border-color:var(--ac1)}
+label{display:block;margin:12px 0 0;font-size:13px;color:var(--mu)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{border:2px solid transparent;background:var(--card);color:var(--tx);border-radius:30px;padding:8px 12px;font:inherit;font-weight:800;font-size:14px}
+.chip.on{border-color:var(--ac2);background:rgba(255,79,163,.18)}
+.tog{display:flex;background:var(--card);border-radius:20px;padding:4px}
+.tog button{flex:1;border:0;border-radius:16px;padding:12px;font:inherit;font-weight:900;font-size:16px;background:none;color:var(--mu)}
+.tog .cr.on{background:var(--cr);color:#06271d}.tog .db.on{background:var(--db);color:#fff}
+#amt{font-size:44px;text-align:center;font-weight:900}
+#shade{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:20}
+#sheet{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;max-height:90%;overflow-y:auto;background:var(--bg);border-radius:30px 30px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));z-index:21;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.9,.3,1)}
+#sheet.up{transform:none}
+#toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-150%);background:linear-gradient(135deg,var(--ac1),var(--ac2));color:#fff;padding:12px 18px;border-radius:20px;font-weight:900;z-index:30;width:max-content;max-width:90%;text-align:center;transition:transform .35s cubic-bezier(.2,1.4,.4,1)}
+#toast.show{transform:translate(-50%,0)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal .d{aspect-ratio:1/1.1;border-radius:14px;background:var(--card);padding:4px 0;font-size:13px;font-weight:800;border:0;color:var(--tx);font-family:inherit}
+.cal .d small{display:block;font-size:9.5px;font-weight:900}.cal .d.today{outline:2px solid var(--ac2)}.cal .d.e{background:none}
+.bar{height:12px;border-radius:8px;background:var(--card);overflow:hidden}.bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--cr),var(--ac3))}
+.pig{font-size:52px;display:inline-block;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-5deg)}}
+@media(prefers-reduced-motion:reduce){.pig{animation:none}#sheet{transition:none}}
+.sw{overflow-x:auto}svg{max-width:100%}
+#wr{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);color:#fff}
+.wrs{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory}
+.wc{flex:none;width:100%;scroll-snap-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px 28px;gap:12px}
+.wc .n{font-size:58px;font-weight:900;line-height:1.05}.wc .e{font-size:84px}.wc p{margin:0;font-size:18px}
+.wx{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:16px;z-index:41;border:0;border-radius:50%;width:40px;height:40px;font-size:18px;background:rgba(0,0,0,.35);color:#fff}
+.wc .btn{background:#fff;color:#2d2250;max-width:260px}
+.swr{position:relative;overflow:hidden;border-radius:16px;margin-bottom:6px}
+.swb{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 18px;font-weight:900;color:#fff;background:linear-gradient(90deg,var(--ac1) 50%,var(--db) 50%)}
+.swf{position:relative;background:var(--bg);padding:0 10px;touch-action:pan-y;border-bottom:1px solid var(--card)}
+.ff{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ff label{margin:0}.ff select,.ff input{margin-top:0}
+#lk,#wl{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
+.dots{display:flex;gap:14px;margin:4px 0 8px}.dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--mu)}.dots i.f{background:linear-gradient(135deg,var(--ac1),var(--ac2));border-color:transparent}
+.pad{display:grid;grid-template-columns:repeat(3,74px);gap:14px}.pad button{height:74px;border-radius:50%;border:0;font:inherit;font-size:28px;font-weight:900;background:var(--card);color:var(--tx)}.pad button:active{transform:scale(.92)}
+details>summary{list-style:none;cursor:pointer;font-weight:900;font-size:17px}details>summary::-webkit-details-marker{display:none}details>summary::after{content:'▾';float:right;color:var(--mu)}details[open]>summary::after{content:'▴'}
+details.grp{margin-bottom:8px}details.grp>summary{font-size:18px;padding:10px 4px}
+.shk{animation:shk .35s}@keyframes shk{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+</style>
+</head>
+<body>
+<div id="app"><div id="main"></div><button class="fab" id="fab" onclick="addMenu()" aria-label="Add entry">+</button><button class="fab mic" id="mic" onclick="voiceStart()" aria-label="Speak an entry">🎤</button>
+<nav class="nav" id="nav"></nav></div>
+<div id="shade" onclick="closeSheet()"></div><div id="sheet"></div><div id="toast"></div>
+<script>
+const CATS=[['Food','🍕','#ff9f43'],['Travel','🚌','#4cc9f0'],['Shopping','🛍️','#ff5fa2'],['Bills','💡','#ffd23f'],['Health','💊','#3ee6b0'],['Salary','💰','#34d399'],['Other','✨','#a78bfa']];
+const THEMES=[['midnight','Baby Blue'],['cotton','Cotton Candy'],['lofi','Pastel Dream'],['mint','Mint Fresh']];
+const PM=['Cash','UPI','Card','Bank'];
+const DEB=['Oh no, not again! 😭 {a} just left the chat.','And just like that, {a} said bye-bye 👋 It didn’t even text back.','Your wallet felt a disturbance in the force 😮‍💨 -{a}','Another one bites the dust 🎶 -{a} gone.','Swipe now, cry later 💳😂 -{a}','Was it worth it? Be honest. 👀 -{a}'];
+const CRE=['Cha-ching!! 🤑 +{a} just slid in. Act cool.','Money has entered the chat 💸 and it’s staying this time. Hopefully.','+{a} incoming! Your wallet is doing a happy dance 💃'];
+const BIG='Excuse me?? 😳 That was a BIG one. Blink twice if you were hacked.';
+const GEN=['Logged ✅ {a} noted.','Got it. -{a} recorded 🌿','Saved! Every entry helps you see the bigger picture 💛'];
+const UNH=['{a} GONE. Funeral at dawn. Bring snacks (you can’t afford them) 🪦','Your bank balance just screamed. I heard it. -{a} 💀','-{a}?! The audacity. The nerve. The receipt. 🧾🔥'];
+function pool(){return S.sass==='gentle'?GEN:S.sass==='unhinged'?DEB.concat(UNH):DEB}
+let S=load(),tab='home',M=new Date(),sel=null;M.setDate(1);
+function def(){return{tx:[],bills:[],cur:'₹',theme:'midnight',budget:0,big:5000,sass:'spicy',cats:CATS.map(c=>c.slice()),rt:[],income:0,cb:{},fr:[],sp:[],st:[],name:''}}
+function load(){try{return Object.assign(def(),JSON.parse(localStorage.getItem('pp1')||'{}'))}catch(e){return def()}}
+function save(){try{localStorage.setItem('pp1',JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s),pick=a=>a[Math.floor(Math.random()*a.length)];
+const money=n=>S.cur+Math.abs(Math.round(n)).toLocaleString('en-IN');
+const cat=n=>CATS.find(c=>c[0]===n)||CATS.find(c=>c[0]==='Other')||CATS[0];
+const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+const dkey=d=>key(d)+'-'+String(d.getDate()).padStart(2,'0');
+const inM=(t,m)=>key(new Date(t.ts))===key(m);
+const sum=(a,ty)=>a.filter(t=>t.type===ty&&!t.xf).reduce((s,t)=>s+t.amt,0);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t.h);t.h=setTimeout(()=>t.classList.remove('show'),2800)}
+function openSheet(h){$('#sheet').innerHTML=h;$('#shade').style.display='block';requestAnimationFrame(()=>$('#sheet').classList.add('up'))}
+function closeSheet(){PI=null;if(REC)try{REC.abort()}catch(e){}$('#sheet').classList.remove('up');$('#shade').style.display='none'}
+function setTab(t){if(t==='bills'||t==='settings'){more=t;t='more'}else if(t==='calendar'){act='cal';t='activity'}else if(t==='all'){act='list';t='activity'}tab=t;render()}
+function shift(n){M=new Date(M.getFullYear(),M.getMonth()+n,1);render()}
+function monthBar(){return`<div class="row sp" style="margin-bottom:12px"><button class="pill" onclick="shift(-1)">‹</button><b style="font-size:17px">${M.toLocaleString('en',{month:'long',year:'numeric'})}</b><button class="pill" onclick="shift(1)">›</button></div>`}
+function greet(){const h=new Date().getHours(),n=S.name?esc(S.name):'';return h<12?(n?'Good morning, '+n+' ☀️':'Good morning, money boss ☀️'):h<17?(n?n+', afternoon slump? Don’t online shop 🛒':'Afternoon slump? Don’t online shop 🛒'):h<22?(n?'Evening check-in, '+n+' 🌆':'Evening check-in, bestie 🌆'):(n?n+', your wallet is sleeping. Don’t wake it 🌙':'Late night? Your wallet is sleeping, don’t wake it 🌙')}
+function welcome(){const o=document.createElement('div');o.id='wl';o.style.zIndex=50;o.innerHTML='<div class="pig">'+logo(88)+'</div><h2>Hey you! 👋</h2><div class="mu" style="text-align:center">Ready to find out where your money disappears?<br>What should we call you?</div><input id="wn" maxlength="20" placeholder="Your name" style="max-width:280px;text-align:center;font-size:20px"><button class="btn" id="wg" style="max-width:280px">Let’s go</button><button class="chip" id="wk">Skip for now</button>';document.body.appendChild(o);
+const go=sk=>{const v=sk?'':$('#wn').value.trim();S.name=v;S.ws=1;save();o.remove();render();if(v)toast('Nice to meet you, '+v+' 🎉')};
+o.querySelector('#wg').onclick=()=>go(false);o.querySelector('#wk').onclick=()=>go(true);o.querySelector('#wn').onkeydown=e=>{if(e.key==='Enter')go(false)}}
+function entRow(t,tm){const c=cat(t.cat),d=new Date(t.ts);return`<div class="ent" onclick="openEntry('${t.id}')"><div class="ico" style="background:${c[2]}33">${c[1]}</div><div class="g"><div>${esc(t.reason||c[0])}</div><div class="mu">${tm?d.toLocaleTimeString('en',{hour:'numeric',minute:'2-digit'}):d.toLocaleString('en',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}${t.pm?' • '+t.pm:''}</div></div><b class="${t.type==='cr'?'cr':'db'}">${t.type==='cr'?'+':'-'}${money(t.amt)}</b></div>`}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function donut(items,tot){if(!tot)return'';let o=0,r=46,C=2*Math.PI*r;const arcs=items.map(([n,v])=>{const l=v/tot*C,s=`<circle r="${r}" cx="60" cy="60" fill="none" stroke="${cat(n)[2]}" stroke-width="18" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-o}" transform="rotate(-90 60 60)"/>`;o+=l;return s}).join('');return`<div class="row" style="gap:14px"><svg width="120" height="120" viewBox="0 0 120 120" style="flex:none">${arcs}<text x="60" y="58" text-anchor="middle" fill="currentColor" font-size="10" opacity=".6">Spent</text><text x="60" y="74" text-anchor="middle" fill="currentColor" font-weight="900" font-size="15">${km(tot)}</text></svg><div style="flex:1;min-width:0">${items.map(([n,v])=>`<div class="row sp lg"><span class="row" style="gap:6px;min-width:0"><i class="sw" style="background:${cat(n)[2]}"></i>${cat(n)[1]} ${esc(n)}</span><span><b>${km(v)}</b> <span class="mu">${Math.round(v/tot*100)}%</span></span></div>`).join('')}</div></div>`}
+function byCat(a){const m={};a.filter(t=>t.type==='db'&&!t.xf).forEach(t=>m[t.cat]=(m[t.cat]||0)+t.amt);return Object.entries(m).sort((x,y)=>y[1]-x[1])}
+function carry(m){const end=new Date(m.getFullYear(),m.getMonth()+1,1).getTime();return S.tx.filter(t=>t.ts<end).reduce((s,t)=>s+(t.type==='cr'?t.amt:-t.amt),0)}
+function home(){const a=S.tx.filter(t=>inM(t,M)),cr=sum(a,'cr'),db=sum(a,'db'),bal=carry(M),td=dkey(new Date()),today=S.tx.filter(t=>dkey(new Date(t.ts))===td).sort((x,y)=>y.ts-x.ts),h=new Date().getHours(),st=streak();
+return`<div class="row sp" style="margin-bottom:12px"><div class="row" style="gap:10px">${logo(38)}<div><div class="mu" style="font-weight:700">${h<12?'Good morning':h<17?'Good afternoon':'Good evening'}${S.name?',':''}</div><b style="font-size:18px">${S.name?esc(S.name):'Pockit'}</b></div></div>${st?`<span class="pill">🔥 ${st} day${st>1?'s':''}</span>`:''}</div>${monthBar()}<div class="hero"><div style="font-size:13px;opacity:.8">Balance</div><div class="big">${bal<0?'-':''}${money(bal)}</div><div class="row" style="gap:8px;margin-top:10px"><div class="hs"><span class="cr">↓</span> Money in<b class="cr">${money(cr)}</b></div><div class="hs"><span class="db">↑</span> Money out<b class="db">${money(db)}</b></div></div></div>${alertsRow()}${forecastCard()}<div class="card"><h3 style="margin-bottom:10px">Where it went</h3>${db?donut(byCat(a),db):'<div class="mu">No spending yet this month 👀</div>'}</div><div class="card"><div class="row sp"><h3>Today</h3><button class="pill" onclick="setTab('all')">See all ›</button></div>${today.length?today.map(t=>entRow(t,1)).join(''):'<div class="mu" style="padding-top:8px">Nothing logged today. Tap + or 🎤</div>'}</div>`}
+function calendar(){const y=M.getFullYear(),m=M.getMonth(),first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),a=S.tx.filter(t=>inM(t,M));let h=`${monthBar()}<div class="cal mu" style="margin-bottom:6px">${'SMTWTFS'.split('').map(d=>`<div>${d}</div>`).join('')}</div><div class="cal">`;for(let i=0;i<first;i++)h+='<div class="d e"></div>';for(let d=1;d<=n;d++){const k=dkey(new Date(y,m,d)),net=a.filter(t=>dkey(new Date(t.ts))===k).reduce((s,t)=>s+(t.type==='cr'?t.amt:-t.amt),0),has=a.some(t=>dkey(new Date(t.ts))===k);h+=`<button class="d ${k===dkey(new Date())?'today':''}" onclick="dayList('${k}')">${d}${has?`<small class="${net>=0?'cr':'db'}">${net>=0?'+':'-'}${compact(net)}</small>`:''}</button>`}return h+'</div>'}
+const km=n=>S.cur+compact(n),fdt=k=>new Date(k+'T00:00').toLocaleDateString('en',{day:'numeric',month:'short'});
+function compact(n){n=Math.abs(n);return n>=1e5?(n/1e5).toFixed(1)+'L':n>=1e3?(n/1e3).toFixed(1)+'k':Math.round(n)}
+function dayList(k){const l=S.tx.filter(t=>dkey(new Date(t.ts))===k).sort((x,y)=>y.ts-x.ts);openSheet(`<h2 style="margin-bottom:8px">${new Date(k+'T00:00').toLocaleDateString('en',{weekday:'long',day:'numeric',month:'long'})}</h2>${l.length?l.map(entRow).join(''):'<div class="mu">No entries this day.</div>'}<button class="btn" style="margin-top:14px" onclick="openEntry(null,'${k}')">Add entry</button>`)}
+function reports(){const a=S.tx.filter(t=>inM(t,M)),n=new Date(M.getFullYear(),M.getMonth()+1,0).getDate(),dd=Array(n).fill(0),net=Array(n).fill(0);a.forEach(t=>{const d=new Date(t.ts).getDate()-1;if(t.type==='db'&&!t.xf)dd[d]+=t.amt;net[d]+=t.type==='cr'?t.amt:-t.amt});
+const mx=Math.max(...dd,1),W=360,H=80,bw=W/n,bars=dd.map((v,i)=>`<rect x="${i*bw+1}" y="${H-v/mx*H}" width="${bw-2}" height="${v/mx*H}" rx="3" fill="var(--db)"/>`).join(''),ax=[1,10,20,n].map(d=>`<text x="${(d-.5)*bw}" y="${H+14}" text-anchor="middle" font-size="10" fill="var(--mu)">${d}</text>`).join('');
+let run=carry(new Date(M.getFullYear(),M.getMonth()-1,1)),pts=net.map(v=>run+=v),lo=Math.min(...pts),hi=Math.max(...pts);if(hi-lo<1)hi=lo+1;const line=pts.map((v,i)=>`${i*bw+bw/2},${H-4-(v-lo)/(hi-lo)*(H-8)}`).join(' ');
+const db=sum(a,'db'),pm=new Date(M.getFullYear(),M.getMonth()-1,1),pdb=sum(S.tx.filter(t=>inM(t,pm)),'db'),big=a.filter(t=>t.type==='db'&&!t.xf).sort((x,y)=>y.amt-x.amt)[0],cats=byCat(a),diff=pdb?Math.round((db-pdb)/pdb*100):null;
+return`${monthBar()}<div class="tiles"><div class="tile"><div class="e">💸</div>Spent<b class="db">${km(db)}</b></div><div class="tile"><div class="e">${diff===null?'📅':diff<=0?'📉':'📈'}</div>vs last month<b class="${diff>0?'db':'cr'}">${diff===null?'—':(diff>0?'+':'')+diff+'%'}</b></div><div class="tile" ${big?`onclick="openEntry('${big.id}')"`:''}><div class="e">🏆</div>Biggest<b>${big?km(big.amt):'—'}</b></div></div><div class="card"><h3 style="margin-bottom:10px">By category</h3>${cats.length?donut(cats,db):'<div class="mu">No spending logged yet.</div>'}</div>${catBudCard()}<div class="card"><h3>Daily spending</h3><svg viewBox="0 0 ${W} ${H+18}" width="100%" style="margin-top:10px">${bars}${ax}</svg></div><div class="card"><h3>Running balance</h3><svg viewBox="0 0 ${W} ${H}" width="100%" style="margin-top:10px"><polyline points="${line}" fill="none" stroke="var(--cr)" stroke-width="3" stroke-linejoin="round"/></svg></div><button class="btn ghost" onclick="wrapped()">✨ See your Wrapped</button>`}
+function bills(){const l=[...S.bills].sort((x,y)=>x.paid-y.paid||x.due.localeCompare(y.due)),td=dkey(new Date()),mk=key(M),inm=S.bills.filter(b=>b.due.startsWith(mk));
+return`<div class="grid3" style="grid-template-columns:repeat(3,1fr)"><div class="mini"><span class="mu">Due</span><b>${money(inm.reduce((s,b)=>s+b.amt,0))}</b></div><div class="mini"><span class="mu">Paid</span><b class="cr">${money(inm.filter(b=>b.paid).reduce((s,b)=>s+b.amt,0))}</b></div><div class="mini"><span class="mu">Pending</span><b class="db">${money(inm.filter(b=>!b.paid).reduce((s,b)=>s+b.amt,0))}</b></div></div><button class="btn" style="padding:12px" onclick="openBill()">+ Add a bill</button><div style="margin-top:14px">${l.length?l.map(b=>{const o=!b.paid&&b.due<td,soon=!b.paid&&!o&&(new Date(b.due)-new Date(td))/864e5<=3,col=b.paid?'var(--cr)':o?'var(--db)':soon?'#ffb020':'var(--mu)';return`<div class="card row sp" style="border-left:5px solid ${col};padding:12px 14px"><div onclick="openBill('${b.id}')"><b>${esc(b.name)}</b><div class="mu">${money(b.amt)} • ${fdt(b.due)} • ${b.freq}</div></div>${b.paid?'<b class="cr">Paid ✓</b>':`<button class="chip on" onclick="pay('${b.id}')">Mark paid</button>`}</div>`}).join(''):'<div class="mu">No bills yet. Add rent, EMIs or SIPs so nothing sneaks up on you.</div>'}</div>`}
+function pay(id){const b=S.bills.find(x=>x.id===id);S.tx.push({id:uid(),type:'db',amt:b.amt,cat:'Bills',reason:b.name,ts:Date.now(),pm:''});if(b.freq==='monthly'||b.freq==='yearly'){const d=new Date(b.due);b.freq==='monthly'?d.setMonth(d.getMonth()+1):d.setFullYear(d.getFullYear()+1);b.due=dkey(d)}else b.paid=true;save();render();toast('Paid! 🎉 You are officially adulting.')}
+function openBill(id){const b=S.bills.find(x=>x.id===id)||{name:'',amt:'',due:dkey(new Date()),freq:'monthly'};openSheet(`<h2>${id?'Edit':'New'} bill</h2><label>Name<input id="bn" value="${esc(b.name)}" placeholder="Rent, SIP, EMI…"></label><label>Amount<input id="ba" type="number" inputmode="decimal" value="${b.amt}"></label><label>Due date<input id="bd" type="date" value="${b.due}"></label><label>Repeats<select id="bf">${['monthly','yearly','one time'].map(f=>`<option ${f===b.freq?'selected':''}>${f}</option>`).join('')}</select></label><button class="btn" style="margin-top:18px" onclick="saveBill('${id||''}')">Save bill</button>${id?`<button class="btn red" style="margin-top:10px" onclick="delBill('${id}')">Delete</button>`:''}`)}
+function saveBill(id){const n=$('#bn').value.trim(),a=+$('#ba').value;if(!n||!(a>0))return toast('Add a name and an amount first');const o={name:n,amt:a,due:$('#bd').value,freq:$('#bf').value,paid:false};if(id)Object.assign(S.bills.find(x=>x.id===id),o);else S.bills.push({id:uid(),...o});save();closeSheet();render()}
+function delBill(id){S.bills=S.bills.filter(b=>b.id!==id);save();closeSheet();render()}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+let et='db',ec='Food';
+function openEntry(id,day){const t=S.tx.find(x=>x.id===id),d=t?new Date(t.ts):(day?new Date(day+'T'+new Date().toTimeString().slice(0,5)):new Date());et=t?t.type:'db';ec=t?t.cat:'Food';const z=d.getTimezoneOffset()*6e4,loc=new Date(d-z).toISOString().slice(0,16);
+openSheet(`<div class="tog"><button class="db ${et==='db'?'on':''}" id="tdb" onclick="setT('db')">Debit</button><button class="cr ${et==='cr'?'on':''}" id="tcr" onclick="setT('cr')">Credit</button></div><label style="text-align:center">Amount (${S.cur})<input id="amt" type="number" inputmode="decimal" placeholder="0" value="${t?t.amt:''}"></label><label>Category</label><div class="chips" id="cc">${CATS.map(c=>`<button class="chip ${c[0]===ec?'on':''}" onclick="setC('${c[0]}')">${c[1]} ${c[0]}</button>`).join('')}</div><label>What was it for?<input id="rs" maxlength="60" value="${t?esc(t.reason):''}" placeholder="Chai with friends"></label><label>When<input id="dt" type="datetime-local" value="${loc}"></label><label>Paid with<select id="pm"><option value="">—</option>${PM.map(p=>`<option ${t&&t.pm===p?'selected':''}>${p}</option>`).join('')}</select></label><button class="btn" style="margin-top:18px" onclick="saveEntry('${id||''}')">Save</button>${t?`<button class="btn red" style="margin-top:10px" onclick="delEntry('${id}')">Delete 💨</button>`:''}`);setTimeout(()=>$('#amt').focus(),300)}
+function setT(x){et=x;$('#tdb').classList.toggle('on',x==='db');$('#tcr').classList.toggle('on',x==='cr')}
+function setC(c){ec=c;[...$('#cc').children].forEach(b=>b.classList.toggle('on',b.textContent.includes(c)))}
+function saveEntry(id){const a=+$('#amt').value;if(!(a>0))return toast('Enter an amount above zero');const o={type:et,amt:a,cat:ec,reason:$('#rs').value.trim(),ts:new Date($('#dt').value).getTime()||Date.now(),pm:$('#pm').value,...(PI?{items:PI}:{})};if(id)Object.assign(S.tx.find(x=>x.id===id),o);else S.tx.push({id:uid(),...o});save();closeSheet();render();
+toast(id?'Updated ✏️':et==='db'&&a>=S.big?BIG:pick(et==='db'?pool():CRE).replace('{a}',money(a)));{const cc=ec;if(et==='db')setTimeout(()=>{const m=bAlert(cc);if(m)toast(m)},3200)}}
+function delEntry(id){const dt=S.tx.find(t=>t.id===id);if(dt&&dt.stid)S.st=S.st.filter(x=>x.id!==dt.stid);S.tx=S.tx.filter(t=>t.id!==id);save();closeSheet();render();toast('Poof! 💨 Gone.')}
+function settings(){return`${dt('look','Look & profile',1)}<div class="card"><h3>Pick your vibe</h3><div class="chips">${THEMES.map(t=>`<button class="chip ${S.theme===t[0]?'on':''}" onclick="S.theme='${t[0]}';save();render()">${t[1]}</button>`).join('')}</div></div><div class="card"><label style="margin:0">Currency symbol<input id="cu" value="${esc(S.cur)}" maxlength="3" onchange="S.cur=this.value||'₹';save()"></label><label>“Big spend” alert above<input type="number" inputmode="decimal" value="${S.big}" onchange="S.big=+this.value||5000;save()"></label></div><div class="card"><label style="margin:0">Your name<input value="${esc(S.name||'')}" maxlength="20" placeholder="What should we call you?" onchange="S.name=this.value.trim();save()"></label></div></details>${dt('money','Money')}${budgetCard()}</details>${dt('auto','Automation')}${routineCard()}${typeof smsCard==='function'?smsCard():''}</details>${dt('cat','Categories & tone')}${catCard()}<div class="card"><h3>Sass level 🌶️</h3><div class="chips">${[['gentle','Gentle'],['spicy','Spicy'],['unhinged','Unhinged 🌶️']].map(s=>`<button class="chip ${S.sass===s[0]?'on':''}" onclick="S.sass='${s[0]}';save();render()">${s[1]}</button>`).join('')}</div></div></details>${dt('sec','Security & data')}${lockCard()}<div class="card"><h3>Backup</h3><div class="mu" style="margin:6px 0 10px">Your data lives only in this browser. Export before switching phones.</div><button class="btn" onclick="exportData()">Export backup</button><button class="btn ghost" style="margin-top:10px" onclick="$('#imp').click()">Import backup</button><input id="imp" type="file" accept=".json" hidden onchange="importData(this)"></div></details>`}
+function exportData(){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='pockit-backup.json';a.click()}catch(e){toast('Export isn’t available here. Open the app in your browser.')}}
+function importData(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.tx))throw 0;S=Object.assign(def(),d);syncCats();save();render();toast('Backup restored 🎉')}catch(e){toast('That file doesn’t look like a backup')}};r.readAsText(f)}
+let F={q:'',type:'',cat:'',pm:'',from:'',to:''};
+function listHtml(){const q=F.q.trim().toLowerCase(),l=S.tx.filter(t=>(!q||(t.reason||'').toLowerCase().includes(q)||String(t.amt).includes(q))&&(!F.type||t.type===F.type)&&(!F.cat||t.cat===F.cat)&&(!F.pm||t.pm===F.pm)&&(!F.from||dkey(new Date(t.ts))>=F.from)&&(!F.to||dkey(new Date(t.ts))<=F.to)).sort((x,y)=>y.ts-x.ts);
+if(!l.length)return`<div class="mu" style="padding:16px 0">${S.tx.length?'No matches. Try loosening a filter 🔍':'Nothing here yet… your wallet is either super disciplined or hiding something 👀'}</div>`;
+return`<div class="mu" style="margin:4px 0 8px">${l.length} entries • <span class="cr">+${money(sum(l,'cr'))}</span> • <span class="db">-${money(sum(l,'db'))}</span></div>`+l.slice(0,300).map(t=>`<div class="swr"><div class="swb"><span>✏️ Edit</span><span>Delete 🗑️</span></div><div class="swf" data-id="${t.id}">${entRow(t)}</div></div>`).join('')}
+function updList(){$('#alist').innerHTML=listHtml()}
+function opts(a,v){return a.map(o=>`<option value="${o[0]}" ${v===o[0]?'selected':''}>${o[1]}</option>`).join('')}
+function allTx(){return`<div class="row sp" style="margin-bottom:12px"><h2>All transactions</h2><button class="chip" onclick="setTab('home')">‹ Home</button></div><input id="fq" type="search" placeholder="Search reason or amount" value="${esc(F.q)}" oninput="F.q=this.value;updList()"><div class="card" style="margin-top:10px"><div class="ff"><select onchange="F.type=this.value;updList()">${opts([['','All types'],['cr','Credit'],['db','Debit']],F.type)}</select><select onchange="F.cat=this.value;updList()">${opts([['','All categories']].concat(CATS.map(c=>[c[0],c[1]+' '+c[0]])),F.cat)}</select><select onchange="F.pm=this.value;updList()">${opts([['','Any payment']].concat(PM.map(p=>[p,p])),F.pm)}</select><button class="chip" onclick="F={q:'',type:'',cat:'',pm:'',from:'',to:''};render()">Clear filters</button><label>From<input type="date" value="${F.from}" onchange="F.from=this.value;updList()"></label><label>To<input type="date" value="${F.to}" onchange="F.to=this.value;updList()"></label></div></div><div class="mu" style="margin-bottom:6px">Swipe right to edit, left to delete.</div><div id="alist">${listHtml()}</div>`}
+let sx=0,sy=0,sf=null,dx=0;
+document.addEventListener('touchstart',e=>{const f=e.target.closest('.swf');if(!f){sf=null;return}sf=f;sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;f.style.transition='none'},{passive:true});
+document.addEventListener('touchmove',e=>{if(!sf)return;const x=e.touches[0].clientX-sx,y=e.touches[0].clientY-sy;if(Math.abs(y)>Math.abs(x)&&!dx)return;dx=Math.max(-140,Math.min(140,x));sf.style.transform='translateX('+dx+'px)'},{passive:true});
+document.addEventListener('touchend',()=>{if(!sf)return;const f=sf,id=f.dataset.id;sf=null;f.style.transition='transform .2s';f.style.transform='';const d=dx;dx=0;if(d>90)openEntry(id);else if(d<-90)delEntry(id)},{passive:true});
+const SW=['#ff9f43','#4cc9f0','#ff5fa2','#ffd23f','#3ee6b0','#a78bfa','#ff6b6b','#8bd450'],EM=['🎮','🐶','🎬','🏠','☕','🎁','📚','💄','🚗','🏋️','🎓','💼','🍺','📱','🧴','🎵'],LOCK=['Other','Bills'];
+let cEd=null,cCol=SW[0];
+const DEFCATS=CATS.map(c=>c.slice());
+async function hp(p,s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h=5381;for(const c of s+p)h=(h*33^c.charCodeAt(0))>>>0;return'f'+h}}
+function pinUI(title,sub,done,cancel,forgot){const o=document.createElement('div');o.id='lk';let p='';
+o.innerHTML='<div class="pig">'+logo(80)+'</div><h2>'+title+'</h2><div class="mu">'+sub+'</div><div class="dots" id="pd"><i></i><i></i><i></i><i></i></div><div class="pad">'+[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>k===''?'<span></span>':'<button data-k="'+k+'">'+k+'</button>').join('')+'</div>'+(cancel?'<button class="chip" id="pc">Cancel</button>':'')+(forgot?'<button class="chip" id="pf">Forgot PIN?</button>':'');
+document.body.appendChild(o);const dots=()=>o.querySelectorAll('#pd i').forEach((d,i)=>d.classList.toggle('f',i<p.length));
+o.addEventListener('click',async e=>{const k=e.target.dataset&&e.target.dataset.k;if(k==null)return;if(k==='⌫')p=p.slice(0,-1);else if(p.length<4)p+=k;dots();
+if(p.length===4){const ok=await done(p);if(ok===false){p='';const d=o.querySelector('#pd');d.classList.remove('shk');void d.offsetWidth;d.classList.add('shk');dots()}else o.remove()}});
+if(cancel)o.querySelector('#pc').onclick=()=>o.remove();
+if(forgot){const f=o.querySelector('#pf');f.onclick=()=>{if(!f.dataset.s){f.dataset.s=1;f.textContent='Tap again to erase all data and unlock';return}S=def();S.cats=DEFCATS.map(c=>c.slice());syncCats();save();o.remove();render();toast('Data erased. Fresh start ✨')}}}
+function lockNow(){if(!S.pin||document.getElementById('lk'))return;pinUI('Welcome back 🔒','Enter your PIN',async p=>(await hp(p,S.pin.s))===S.pin.h,false,true)}
+function setPin(){pinUI('Choose a PIN','4 digits you’ll remember',p1=>{setTimeout(()=>pinUI('Confirm your PIN','Type it once more',async p2=>{if(p2!==p1)return false;const s=uid();S.pin={s,h:await hp(p2,s)};save();render();toast('App lock is on 🔒')},true),0)},true)}
+function offPin(change){pinUI(change?'Change PIN':'Turn off lock','Enter your current PIN',async p=>{if((await hp(p,S.pin.s))!==S.pin.h)return false;delete S.pin;save();if(change)setTimeout(setPin,0);else{render();toast('App lock is off')}},true)}
+function lockCard(){return'<div class="card"><h3>App lock 🔒</h3><div class="mu" style="margin:6px 0 10px">'+(S.pin?'On. Asks for your PIN when you open the app.':'Keep your money private with a 4-digit PIN.')+'</div>'+(S.pin?'<button class="btn ghost" onclick="offPin(1)">Change PIN</button><button class="btn red" style="margin-top:10px" onclick="offPin()">Turn off</button>':'<button class="btn" onclick="setPin()">Set a PIN</button>')+'<div class="mu" style="margin-top:10px">This keeps people out of the app but doesn’t encrypt your data. If you forget the PIN, the only way back in erases your data, so export a backup first.</div></div>'}
+const KW={Food:'chai tea coffee lunch dinner breakfast snack food pizza burger biryani zomato swiggy cafe juice meal milk',Travel:'auto cab uber ola bus metro train fuel petrol diesel ticket flight rapido toll parking',Shopping:'shopping amazon flipkart myntra clothes shirt shoes mall gift',Bills:'bill rent emi electricity wifi recharge internet sip insurance water gas',Health:'medicine doctor pharmacy medical gym hospital'},CW=['salary','stipend','bonus','refund','cashback','received','credited'];
+function qtBar(){return'<div class="row" style="margin-bottom:14px"><input id="qt" style="margin:0" placeholder="Type it: chai 20, auto 15 upi, +5000 salary" onkeydown="if(event.key===\'Enter\')qtAdd()"><button class="chip on" style="flex:none" onclick="qtAdd()">Add</button></div>'}
+function qtAdd(src){const raw=(typeof src==='string'?src:(($('#qt')||{}).value||'')).trim();if(!raw)return;let cr=raw[0]==='+';
+const w=raw.split('₹').join(' ').split('+').join(' ').split(' ').filter(Boolean),ni=w.findIndex(x=>/^[0-9][0-9,]*[.]?[0-9]*k?$/i.test(x));if(ni<0)return toast('Add an amount, like “chai 20”');
+const tk=w[ni].toLowerCase(),a=parseFloat(tk.split(',').join(''))*(tk.endsWith('k')?1000:1);if(!(a>0))return toast('Add an amount above zero');
+const rest=w.filter((x,i)=>i!==ni),pm=PM.find(p=>rest.some(x=>x.toLowerCase()===p.toLowerCase()))||'',words=rest.filter(x=>x.toLowerCase()!==pm.toLowerCase()&&!['rs','rs.','inr'].includes(x.toLowerCase()));
+let r=words.join(' ');const lw=' '+r.toLowerCase()+' ';if(words.some(x=>CW.includes(x.toLowerCase())))cr=true;let c=cr?'Salary':'';
+if(!c){const p=S.tx.slice().reverse().find(x=>x.reason&&x.reason.toLowerCase()===r.toLowerCase());if(p)c=p.cat}
+if(!c){const k=CATS.find(x=>lw.includes(' '+x[0].toLowerCase()+' '));if(k)c=k[0]}
+if(!c)for(const k in KW)if(KW[k].split(' ').some(x=>lw.includes(' '+x+' '))){c=k;break}
+if(!CATS.some(x=>x[0]===c))c='Other';r=r?r[0].toUpperCase()+r.slice(1):c;
+S.tx.push({id:uid(),type:cr?'cr':'db',amt:a,cat:c,reason:r,ts:Date.now(),pm});save();closeSheet();render();
+toast((cr?pick(CRE):pick(pool())).replace('{a}',money(a))+' ('+cat(c)[1]+' '+c+')');if(!cr)setTimeout(()=>{const m=bAlert(c);if(m)toast(m)},3200)}
+function plan(){const L=S.budget;if(!(L>0))return null;const now=new Date(),cur=key(M)===key(now),days=new Date(M.getFullYear(),M.getMonth()+1,0).getDate(),el=cur?now.getDate():days,a=S.tx.filter(t=>t.type==='db'&&!t.xf&&inM(t,M)),spent=a.reduce((s,t)=>s+t.amt,0),vs=a.filter(t=>t.cat!=='Bills').reduce((s,t)=>s+t.amt,0),pend=cur?S.bills.filter(b=>!b.paid&&b.due.startsWith(key(M))).reduce((s,b)=>s+b.amt,0):0,avg=vs/el,proj=cur?spent+avg*(days-el)+pend:spent,hit=cur&&avg>0&&spent<L?el+Math.max(0,Math.ceil((L-spent-pend)/avg)):0;return{L,cur,days,el,a,spent,pend,avg,proj,hit}}
+function forecastCard(){const p=plan();if(!p)return'<button class="pill" style="margin-bottom:12px" onclick="setTab(\'settings\')">🎯 Set a spending limit</button>';
+const pc=p.spent/p.L*100,over=p.spent>p.L,late=p.cur&&p.el>=3&&p.proj>p.L,mon=M.toLocaleString('en',{month:'short'});
+const msg=!p.cur?(over?'Ended '+km(p.spent-p.L)+' over':'Ended '+km(p.L-p.spent)+' under ✨'):over?'🚨 Over by '+km(p.spent-p.L):p.el<3?'Forecast in a few days':late?'⚠️ Heading to '+km(p.proj)+(p.hit>p.el&&p.hit<=p.days?' · limit ~'+p.hit+' '+mon:''):'✓ On track · '+km(p.proj);
+return'<div class="card"><div class="row sp"><b>🎯 Spending limit</b><span class="mu">'+km(p.spent)+' / '+km(p.L)+'</span></div><div class="bar" style="margin:10px 0 8px"><i style="width:'+Math.min(pc,100)+'%;'+(over||late?'background:var(--db)':'')+'"></i></div><div class="row sp" style="font-size:12px"><span class="mu">'+Math.round(pc)+'% used</span><b class="'+(over||late?'db':'cr')+'">'+msg+'</b></div></div>'}
+function catBudCard(){const p=plan(),ks=CATS.filter(c=>S.cb[c[0]]>0);if(!ks.length)return'';const a=S.tx.filter(t=>t.type==='db'&&!t.xf&&inM(t,M)),el=p?p.el:1,days=p?p.days:30,cur=p?p.cur:false;
+return'<div class="card"><h3 style="margin-bottom:4px">Category budgets</h3>'+ks.map(c=>{const b=S.cb[c[0]],s=a.filter(t=>t.cat===c[0]).reduce((x,t)=>x+t.amt,0),pj=!cur||el<3?s:c[0]==='Bills'?s+(p.pend||0):s+s/el*(days-el),over=s>b,warn=!over&&pj>b,col=over?'var(--db)':warn?'#ffb020':'var(--cr)';
+return'<div style="margin:10px 0"><div class="row sp" style="font-size:14px"><span>'+c[1]+' '+esc(c[0])+'</span><span class="mu">'+km(s)+' / '+km(b)+'</span></div><div class="bar" style="margin:5px 0;height:8px"><i style="width:'+Math.min(s/b*100,100)+'%;background:'+col+'"></i></div><div style="font-size:12px;color:'+col+'">'+(over?'Over by '+km(s-b):warn?'Forecast '+km(pj):km(b-s)+' left')+'</div></div>'}).join('')+'</div>'}
+function alertMsg(){const p=plan();if(!p||!p.cur)return'';if(p.spent>p.L)return'Limit crossed by '+money(p.spent-p.L)+' this month 🚨';if(p.el>=3&&p.proj>p.L)return'Heads up: at this pace you’ll end the month '+money(p.proj-p.L)+' over your limit 📈';const o=CATS.find(c=>S.cb[c[0]]>0&&p.a.filter(t=>t.cat===c[0]).reduce((s,t)=>s+t.amt,0)>S.cb[c[0]]);return o?o[0]+' budget is already crossed 🚨':''}
+function bAlert(c){const now=new Date(),a=S.tx.filter(t=>t.type==='db'&&!t.xf&&inM(t,now)),b=S.cb[c]||0,s=a.filter(t=>t.cat===c).reduce((x,t)=>x+t.amt,0),tot=a.reduce((x,t)=>x+t.amt,0);
+if(b>0&&s>b)return c+' budget crossed: '+money(s)+' of '+money(b)+' 🚨';if(b>0&&s>=b*.8)return c+' budget is '+Math.round(s/b*100)+'% used ⚠️';if(S.budget>0&&tot>S.budget)return'Monthly limit crossed 🚨';return''}
+function setCb(i,v){const n=CATS[i][0];if(+v>0)S.cb[n]=+v;else delete S.cb[n];save();render()}
+function autoSplit(){const L=S.budget;if(!(L>0))return toast('Set your spending limit first');const names=CATS.map(c=>c[0]).filter(n=>n!=='Salary'),h={};
+for(let i=1;i<=3;i++){const m=new Date(new Date().getFullYear(),new Date().getMonth()-i,1);S.tx.filter(t=>t.type==='db'&&!t.xf&&inM(t,m)).forEach(t=>h[t.cat]=(h[t.cat]||0)+t.amt)}
+const has=Object.values(h).reduce((a,b)=>a+b,0)>0,dw={Food:30,Travel:15,Shopping:15,Bills:25,Health:5,Other:10},w=names.map(n=>has?(h[n]||0):(dw[n]||0)),ws=w.reduce((a,b)=>a+b,0)||1;
+S.cb={};names.forEach((n,i)=>{const v=Math.round(L*w[i]/ws/50)*50;if(v>0)S.cb[n]=v});save();render();toast(has?'Split based on your last 3 months ✨':'Split with a balanced starting mix ✨')}
+function budgetCard(){const L=S.budget||0,I=S.income||0,names=CATS.filter(c=>c[0]!=='Salary'),al=names.reduce((s,c)=>s+(S.cb[c[0]]||0),0);
+return'<div class="card"><h3>Budget & savings 🎯</h3><label>Monthly income (salary)<input type="number" inputmode="decimal" value="'+(I||'')+'" onchange="S.income=+this.value||0;save();render()"></label><label>Monthly spending limit<input type="number" inputmode="decimal" value="'+(L||'')+'" onchange="S.budget=+this.value||0;save();render()"></label>'+(I>0&&L>0?'<div class="mu" style="margin-top:8px">You save <b class="cr">'+money(I-L)+'</b> a month ('+Math.round((I-L)/I*100)+'% of income)'+(L>I?' <span class="db">⚠️ limit is above income</span>':'')+'</div>':'')+(I>0?'<button class="chip" style="margin-top:8px" onclick="S.budget=Math.round(S.income/2);save();render()">Suggest: spend 50%</button>':'')+'<h3 style="margin-top:16px">Category budgets</h3><div class="mu" style="margin:4px 0 8px">Allocated '+money(al)+(L>0?' of '+money(L):'')+(L>0&&al>L?' <span class="db">(over your limit)</span>':'')+'</div>'+names.map(c=>'<div class="row sp" style="margin-bottom:6px"><span>'+c[1]+' '+esc(c[0])+'</span><input type="number" inputmode="decimal" style="width:110px;margin:0;text-align:right" value="'+(S.cb[c[0]]||'')+'" placeholder="0" onchange="setCb('+CATS.indexOf(c)+',this.value)"></div>').join('')+'<button class="btn ghost" style="margin-top:10px" onclick="autoSplit()">✨ Auto-split my limit</button></div>'}
+let SPs={sel:{},payer:'me',mode:'eq',ex:{}};
+function fname(id){if(id==='me')return'You';const f=S.fr.find(x=>x.id===id);return f?f.name:'Former friend'}
+function bals(){const b={};S.fr.forEach(f=>b[f.id]=0);S.sp.forEach(e=>{if(e.payer==='me'){for(const k in e.sh)if(k!=='me'&&k in b)b[k]+=e.sh[k]}else if(e.payer in b)b[e.payer]-=(e.sh.me||0)});S.st.forEach(s=>{if(s.from==='me'&&s.to in b)b[s.to]+=s.amt;else if(s.to==='me'&&s.from in b)b[s.from]-=s.amt});for(const k in b)b[k]=Math.round(b[k]*100)/100;return b}
+function splitTab(){const b=bals(),ids=Object.keys(b),owed=ids.reduce((s,k)=>s+Math.max(b[k],0),0),owe=ids.reduce((s,k)=>s+Math.max(-b[k],0),0);
+return`<div class="grid3" style="grid-template-columns:1fr 1fr"><div class="mini"><span class="mu">You’re owed</span><b class="cr">${money(owed)}</b></div><div class="mini"><span class="mu">You owe</span><b class="db">${money(owe)}</b></div></div><div class="row"><button class="btn" style="padding:12px" onclick="openSplit()">+ Split a bill</button><button class="btn ghost" style="padding:12px" onclick="openFriend()">+ Friend</button></div><div class="card" style="margin-top:14px"><h3 style="margin-bottom:6px">Friends</h3>${S.fr.length?S.fr.map(f=>{const v=b[f.id];return`<div class="ent" onclick="openFriend('${f.id}')"><div class="ico" style="background:linear-gradient(135deg,var(--ac1),var(--ac2));font-weight:900">${esc(f.name[0].toUpperCase())}</div><div class="g"><div>${esc(f.name)}</div><div class="mu">${v>0?'owes you':v<0?'you owe':'all settled ✨'}</div></div><b class="${v>0?'cr':v<0?'db':'mu'}">${v?money(v):''}</b></div>`}).join(''):'<div class="mu">Add a friend to start splitting dinners, trips, rent, anything shared.</div>'}</div><div class="card"><div class="row sp"><h3>Recent splits</h3><span class="mu">Your share</span></div>${S.sp.length?S.sp.slice().reverse().slice(0,15).map(e=>`<div class="ent" onclick="openSpl('${e.id}')"><div class="ico" style="background:${cat(e.cat)[2]}33">${cat(e.cat)[1]}</div><div class="g"><div>${esc(e.desc)}</div><div class="mu">${esc(fname(e.payer))} paid ${money(e.amt)} • ${new Date(e.ts).toLocaleDateString('en',{day:'numeric',month:'short'})}</div></div><b>${money(e.sh.me||0)}</b></div>`).join(''):'<div class="mu" style="padding-top:6px">No splits yet.</div>'}</div>`}
+function openFriend(id){const f=S.fr.find(x=>x.id===id),b=f?bals()[id]:0;
+openSheet(f?`<h2>${esc(f.name)}</h2><div class="mu" style="margin:4px 0 10px">${b>0?'Owes you '+money(b):b<0?'You owe '+money(-b):'All settled ✨'}</div>${b?`<label>${b>0?esc(f.name)+' paid you':'You paid '+esc(f.name)} (${S.cur})<input id="sta" type="number" inputmode="decimal" value="${Math.abs(b)}"></label><div class="mu" style="margin-top:6px">Lower the amount for a part payment.</div><label>Paid with<select id="stp"><option value="">—</option>${PM.map(p=>`<option>${p}</option>`).join('')}</select></label><button class="btn" style="margin-top:14px" onclick="settle('${id}')">✅ Mark as settled</button><div class="mu" style="margin-top:8px">This also adds the payment to your tracker as ${b>0?'money in':'money out'}.</div>`:`<button class="btn red" style="margin-top:12px" onclick="delFr('${id}')">Remove friend</button>`}`:`<h2>Add a friend</h2><label>Name<input id="fn" maxlength="24" placeholder="Aman"></label><button class="btn" style="margin-top:18px" onclick="addFr()">Add friend</button>`)}
+function addFr(){const n=$('#fn').value.trim();if(!n)return toast('Enter a name');if(S.fr.some(f=>f.name.toLowerCase()===n.toLowerCase()))return toast(n+' is already on your list');S.fr.push({id:uid(),name:n});save();closeSheet();render();toast(n+' added 🤝')}
+function delFr(id){S.fr=S.fr.filter(f=>f.id!==id);save();closeSheet();render()}
+function settle(id){const a=+$('#sta').value,b=bals()[id],f=S.fr.find(x=>x.id===id),pm=$('#stp').value;if(!(a>0))return toast('Enter an amount');const stid=uid(),ts=Date.now(),inc=b>0,full=Math.abs(a-Math.abs(b))<.01;
+S.st.push({id:stid,ts,from:inc?id:'me',to:inc?'me':id,amt:a});
+if(inc)S.tx.push({id:uid(),type:'cr',amt:a,cat:'Other',reason:f.name+' paid you back',ts,pm,stid,xf:1});
+else{const ls=S.sp.slice().reverse().find(e=>e.payer===id&&e.sh.me>0),old=S.sp.some(e=>e.payer===id&&S.tx.some(t=>t.sid===e.id));S.tx.push({id:uid(),type:'db',amt:a,cat:ls?ls.cat:'Other',reason:'Paid '+f.name+' back'+(ls?' ('+ls.desc+')':''),ts,pm,stid,...(old?{xf:1}:{})})}
+save();closeSheet();render();toast((full?'All settled with '+f.name+' ✨':'Payment recorded ✅')+' Added to your tracker.')}
+function openSplit(){if(!S.fr.length){toast('Add a friend first 🤝');return openFriend()}
+SPs={sel:{me:1},payer:'me',mode:'eq',ex:{}};S.fr.forEach(f=>SPs.sel[f.id]=1);
+openSheet(`<h2>Split a bill</h2><label>What for?<input id="sd" maxlength="40" placeholder="Dinner, cab, rent…"></label><label>Total amount (${S.cur})<input id="sa" type="number" inputmode="decimal" oninput="spUpd()"></label><label>Category<select id="sc">${CATS.filter(c=>c[0]!=='Salary').map(c=>`<option value="${esc(c[0])}">${c[1]} ${esc(c[0])}</option>`).join('')}</select></label><label>Paid by<select id="spy">${[['me','You']].concat(S.fr.map(f=>[f.id,f.name])).map(o=>`<option value="${o[0]}">${esc(o[1])}</option>`).join('')}</select></label><label>Split between</label><div class="tog" style="margin:6px 0"><button class="cr on" id="m1" onclick="spMode('eq')">Equally</button><button class="cr" id="m2" onclick="spMode('ex')">Custom amounts</button></div><div id="spp"></div><button class="btn" style="margin-top:18px" onclick="saveSplit()">Save split</button>`);spUpd()}
+function spMode(m){SPs.mode=m;$('#m1').classList.toggle('on',m==='eq');$('#m2').classList.toggle('on',m==='ex');spUpd()}
+function spTog(id){if(SPs.sel[id])delete SPs.sel[id];else SPs.sel[id]=1;spUpd()}
+function spUpd(){const a=+$('#sa').value||0,ppl=[['me','You']].concat(S.fr.map(f=>[f.id,f.name])),n=ppl.filter(p=>SPs.sel[p[0]]).length||1;
+$('#spp').innerHTML=ppl.map(p=>{const on=SPs.sel[p[0]];return`<div class="row sp" style="margin:8px 0"><button class="chip ${on?'on':''}" onclick="spTog('${p[0]}')">${on?'✓ ':''}${esc(p[1])}</button>${on?(SPs.mode==='eq'?'<b>'+money(a/n)+'</b>':`<input type="number" inputmode="decimal" style="width:110px;margin:0;text-align:right" value="${SPs.ex[p[0]]||''}" oninput="SPs.ex['${p[0]}']=+this.value">`):''}</div>`}).join('')}
+function saveSplit(){const a=+$('#sa').value,d=$('#sd').value.trim()||'Shared expense',ids=Object.keys(SPs.sel),payer=$('#spy').value,c=$('#sc').value;if(!(a>0))return toast('Enter the total amount');
+if(!ids.length||(ids.length===1&&ids[0]===payer))return toast('Pick who shares this bill');const sh={};
+if(SPs.mode==='eq'){const P=Math.round(a*100),base=Math.floor(P/ids.length);let rem=P-base*ids.length;ids.forEach(k=>{sh[k]=(base+(rem-->0?1:0))/100})}
+else{let t=0;ids.forEach(k=>{sh[k]=+(SPs.ex[k]||0);t+=sh[k]});if(Math.abs(t-a)>.5)return toast('Custom amounts add up to '+money(t)+', not '+money(a))}
+const id=uid(),ts=Date.now();S.sp.push({id,ts,desc:d,amt:a,payer,sh,cat:c});const me=sh.me||0;
+if(payer==='me'){if(me>0)S.tx.push({id:uid(),type:'db',amt:me,cat:c,reason:d+' (split)',ts,pm:'',sid:id});if(a-me>0)S.tx.push({id:uid(),type:'db',amt:Math.round((a-me)*100)/100,cat:c,reason:d+' (paid for friends)',ts,pm:'',sid:id,xf:1})}
+save();closeSheet();render();toast('Split saved 🤝'+(payer==='me'?(me>0?' Your share '+money(me)+' added to expenses.':''):(me>0?' Your share goes into your tracker when you settle up.':'')))}
+function openSpl(id){const e=S.sp.find(x=>x.id===id);if(!e)return;openSheet(`<h2>${esc(e.desc)}</h2><div class="mu" style="margin:4px 0 10px">${esc(fname(e.payer))} paid ${money(e.amt)}</div>${Object.keys(e.sh).map(k=>`<div class="row sp" style="margin:6px 0"><span>${esc(fname(k))}</span><b>${money(e.sh[k])}</b></div>`).join('')}<button class="btn red" style="margin-top:16px" onclick="delSpl('${id}')">Delete this split</button>`)}
+function delSpl(id){S.sp=S.sp.filter(x=>x.id!==id);S.tx=S.tx.filter(t=>t.sid!==id);save();closeSheet();render();toast('Split removed. Your share was removed too.')}
+let OP={},act='cal',more='bills';
+function dt(k,t,d){return'<details class="grp" '+((k in OP?OP[k]:d)?'open':'')+' ontoggle="OP.'+k+'=this.open"><summary>'+t+'</summary>'}
+function activity(){return`<div class="tog" style="margin-bottom:12px"><button class="cr ${act==='cal'?'on':''}" onclick="act='cal';render()">Calendar</button><button class="cr ${act==='list'?'on':''}" onclick="act='list';render()">List & search</button></div>`+(act==='cal'?calendar():allTx())}
+function moreTab(){return`<div class="tog" style="margin-bottom:12px"><button class="cr ${more==='bills'?'on':''}" onclick="more='bills';render()">Bills</button><button class="cr ${more==='settings'?'on':''}" onclick="more='settings';render()">Settings</button></div>`+(more==='bills'?bills():settings())}
+function addMenu(){openSheet(`<h2 style="margin-bottom:12px">Add an entry</h2><label style="margin-top:0"><div class="row"><input id="qt" style="margin:0" placeholder="chai 20, auto 15 upi, +5000 salary" onkeydown="if(event.key==='Enter')qtAdd()"><button class="chip on" style="flex:none" onclick="qtAdd()">Add</button></div></label>${(S.rt||[]).length?'<label>Quick add</label><div class="chips">'+S.rt.map(r=>`<button class="chip" onclick="quick('${r.id}')">${cat(r.cat)[1]} ${esc(r.name)} ${money(r.amt)}</button>`).join('')+'</div>':''}<div class="act2"><button class="pr" onclick="voiceStart()"><span>🎤</span>Speak</button><button onclick="openEntry()"><span>✍️</span>Manual</button></div><div class="mu" style="margin-top:8px;text-align:center;font-size:12px">Try saying “chai 20” or “delete last entry”</div>`)}
+function alertsRow(){const p=plan(),a=S.tx.filter(t=>t.type==='db'&&!t.xf&&inM(t,M)),el=p?p.el:1,days=p?p.days:30,cur=p?p.cur:false,w=[];
+CATS.filter(c=>S.cb[c[0]]>0).forEach(c=>{const b=S.cb[c[0]],s=a.filter(t=>t.cat===c[0]).reduce((x,t)=>x+t.amt,0),pj=!cur||el<3?s:c[0]==='Bills'?s+(p.pend||0):s+s/el*(days-el);if(s>b)w.push('<button class="pill db" onclick="setTab(\'reports\')">'+c[1]+' '+esc(c[0])+' +'+km(s-b)+'</button>');else if(pj>b)w.push('<button class="pill warn" onclick="setTab(\'reports\')">'+c[1]+' '+esc(c[0])+' ↗</button>')});
+S.bills.filter(b=>!b.paid).forEach(b=>{const dl=Math.round((new Date(b.due)-new Date(dkey(new Date())))/864e5);if(dl<=3)w.unshift('<button class="pill '+(dl<0?'db':'warn')+'" onclick="setTab(\'bills\')">💡 '+esc(b.name)+' · '+(dl<0?'overdue':dl===0?'today':dl+'d')+'</button>')});
+return w.length?'<div class="pills">'+w.join('')+'</div>':''}
+function logo(s){return'<svg viewBox="0 0 64 64" width="'+s+'" height="'+s+'" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac1)"/><stop offset="1" style="stop-color:var(--ac2)"/></linearGradient></defs><circle cx="24" cy="15" r="9" fill="#ffd76a"/><circle cx="24" cy="15" r="5.5" fill="none" stroke="#f2b84b" stroke-width="2"/><rect x="5" y="19" width="54" height="38" rx="12" fill="url(#lg)"/><path d="M5 31c0-7 5-12 12-12h30c7 0 12 5 12 12z" fill="#fff" opacity=".28"/><rect x="38" y="34" width="22" height="14" rx="7" fill="#fff" opacity=".9"/><circle cx="46" cy="41" r="3" style="fill:var(--ac2)"/><path d="M54 4l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" style="fill:var(--ac3)"/></svg>'}
+const WN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let rEd=null,rDays=[],rAuto=true;
+function routineCard(){return`<div class="card"><div class="row sp"><h3>Daily routines 🚌</h3><button class="chip on" onclick="openRt()">+ Add</button></div><div class="mu" style="margin:6px 0">Fixed repeat spends, like your auto fare. They add themselves to your expenses.</div>${(S.rt||[]).map(r=>`<div class="ent" onclick="openRt('${r.id}')"><div class="ico" style="background:${cat(r.cat)[2]}33">${cat(r.cat)[1]}</div><div class="g"><div>${esc(r.name)}</div><div class="mu">${r.days.length===7?'Every day':r.days.map(d=>WN[d]).join(' ')} • ${r.time}${r.auto?' • auto':''}</div></div><b class="db">-${money(r.amt)}</b></div>`).join('')}</div>`}
+function togDay(i,b){const k=rDays.indexOf(i);k<0?rDays.push(i):rDays.splice(k,1);b.classList.toggle('on',k<0)}
+function openRt(id){const r=(S.rt||[]).find(x=>x.id===id)||{name:'',amt:'',cat:'Travel',days:[1,2,3,4,5],time:'09:00',auto:true};rEd=id||null;rDays=r.days.slice();rAuto=r.auto;
+openSheet(`<h2>${id?'Edit':'New'} routine</h2><label>Name<input id="rn" value="${esc(r.name)}" maxlength="40" placeholder="Auto to work"></label><label>Amount (${S.cur})<input id="ra" type="number" inputmode="decimal" value="${r.amt}"></label><label>Category<select id="rc">${CATS.map(c=>`<option value="${esc(c[0])}" ${c[0]===r.cat?'selected':''}>${c[1]} ${esc(c[0])}</option>`).join('')}</select></label><label>Days</label><div class="chips">${WN.map((n,i)=>`<button class="chip ${rDays.includes(i)?'on':''}" onclick="togDay(${i},this)">${n}</button>`).join('')}</div><label>Time<input id="rtm" type="time" value="${r.time}"></label><label>Add it automatically</label><div class="chips"><button class="chip ${rAuto?'on':''}" onclick="rAuto=!rAuto;this.classList.toggle('on',rAuto);this.textContent=rAuto?'On ✓':'Off'">${rAuto?'On ✓':'Off'}</button></div><div class="mu" style="margin-top:6px">Off means it only shows as a one-tap button on Home. Don’t tap that on days it already auto-added.</div><button class="btn" style="margin-top:18px" onclick="saveRt()">Save routine</button>${id?'<button class="btn red" style="margin-top:10px" onclick="delRt()">Delete</button>':''}`)}
+function saveRt(){const n=$('#rn').value.trim(),a=+$('#ra').value;if(!n||!(a>0))return toast('Add a name and an amount first');if(!rDays.length)return toast('Pick at least one day');
+S.rt=S.rt||[];const o={name:n,amt:a,cat:$('#rc').value,days:rDays.slice().sort(),time:$('#rtm').value||'09:00',auto:rAuto};
+if(rEd)Object.assign(S.rt.find(x=>x.id===rEd),o);else S.rt.push({id:uid(),...o,last:dkey(new Date(Date.now()-864e5))});
+const k=runRt();closeSheet();render();toast(k?'Routine saved and '+k+' entr'+(k>1?'ies':'y')+' added 🚌':'Routine saved 🚌')}
+function delRt(){S.rt=S.rt.filter(x=>x.id!==rEd);save();closeSheet();render();toast('Routine deleted. Past entries stay.')}
+function runRt(){let n=0;const now=new Date(),td=dkey(now);(S.rt||[]).forEach(r=>{if(!r.auto)return;const d=new Date(r.last+'T00:00');d.setDate(d.getDate()+1);let g=0;
+while(dkey(d)<=td&&g++<62){const k=dkey(d),ts=new Date(k+'T'+r.time).getTime();if(k===td&&ts>now.getTime())break;
+if(r.days.includes(d.getDay())&&!S.tx.some(t=>t.rid===r.id&&dkey(new Date(t.ts))===k)){S.tx.push({id:uid(),type:'db',amt:r.amt,cat:r.cat,reason:r.name,ts,pm:'',rid:r.id});n++}
+r.last=k;d.setDate(d.getDate()+1)}});save();return n}
+function quickCard(){const l=S.rt||[];if(!l.length)return'';return`<div class="card"><h3 style="margin-bottom:8px">Quick add ⚡</h3><div class="chips">${l.map(r=>`<button class="chip" onclick="quick('${r.id}')">${cat(r.cat)[1]} ${esc(r.name)} ${money(r.amt)}</button>`).join('')}</div></div>`}
+function quick(id){const r=S.rt.find(x=>x.id===id);S.tx.push({id:uid(),type:'db',amt:r.amt,cat:r.cat,reason:r.name,ts:Date.now(),pm:''});save();closeSheet();render();toast(pick(pool()).replace('{a}',money(r.amt)))}
+let hid=0;document.addEventListener('visibilitychange',()=>{if(document.hidden)hid=Date.now();else{if(runRt())render();if(S.pin&&Date.now()-hid>60000)lockNow()}});
+function syncCats(){CATS.length=0;S.cats.forEach(c=>CATS.push(c))}
+function catCard(){return`<div class="card"><div class="row sp"><h3>Categories</h3><button class="chip on" onclick="openCat()">+ Add</button></div>${CATS.map((c,i)=>`<div class="ent" onclick="openCat(${i})"><div class="ico" style="background:${c[2]}33">${c[1]}</div><div class="g">${esc(c[0])}</div><span class="mu">Edit</span></div>`).join('')}</div>`}
+function pickCol(b,s){cCol=s;[...b.parentNode.children].forEach(x=>x.classList.toggle('on',x===b))}
+function openCat(i){const nw=i==null,c=nw?['','🏷️',SW[0]]:S.cats[i],lk=!nw&&LOCK.includes(c[0]);cEd=nw?null:i;cCol=c[2];
+openSheet(`<h2>${nw?'New':'Edit'} category</h2><label>Name<input id="cn" maxlength="20" value="${esc(c[0])}" placeholder="Gaming, Pets…" ${lk?'readonly':''}></label>${lk?'<div class="mu" style="margin-top:6px">This one is built in, so only its icon and colour can change.</div>':''}<label>Icon<input id="ci" maxlength="8" value="${esc(c[1])}" style="font-size:28px;text-align:center"></label><div class="chips">${EM.map(e=>`<button class="chip" onclick="$('#ci').value='${e}'">${e}</button>`).join('')}</div><label>Colour</label><div class="chips">${SW.map(s=>`<button class="chip ${s===cCol?'on':''}" style="background:${s}" onclick="pickCol(this,'${s}')">&nbsp;&nbsp;&nbsp;</button>`).join('')}</div><button class="btn" style="margin-top:18px" onclick="saveCat()">Save category</button>${nw||lk?'':'<button class="btn red" style="margin-top:10px" onclick="delCat()">Delete</button>'}`)}
+function saveCat(){const n=$('#cn').value.trim(),e=$('#ci').value.trim()||'🏷️';if(!n)return toast('Give it a name first');if(S.cats.some((c,j)=>c[0].toLowerCase()===n.toLowerCase()&&j!==cEd))return toast('You already have a category called '+n);
+if(cEd==null)S.cats.push([n,e,cCol]);else{const old=S.cats[cEd][0];S.cats[cEd]=[n,e,cCol];if(old!==n){S.tx.forEach(t=>{if(t.cat===old)t.cat=n});if(F.cat===old)F.cat=n;if(S.cb[old]!=null){S.cb[n]=S.cb[old];delete S.cb[old]}}}
+syncCats();save();closeSheet();render();toast('Category saved ✨')}
+function delCat(){const c=S.cats[cEd];if(!c||LOCK.includes(c[0]))return;S.tx.forEach(t=>{if(t.cat===c[0])t.cat='Other'});if(F.cat===c[0])F.cat='';delete S.cb[c[0]];S.cats.splice(cEd,1);syncCats();save();closeSheet();render();toast('Category deleted. Its entries moved to Other.')}
+let PI=null;
+let REC=null;
+const NW={zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90},NM={hundred:100,thousand:1e3,k:1e3,lakh:1e5,lakhs:1e5,lac:1e5,crore:1e7};
+const VSTOP=new Set('i i\'ve ive just please add added log spent spend paid pay on for of the a an rupees rupee rs inr bucks today expense amount'.split(' ')),VCR=['got','received','receive','earned','credited','credit','income'],VDEL=['delete','remove','undo','cancel','erase','scratch'],VVIA=['with','by','via','using','through','in'];
+function vNums(s){const o=[];let cur=null,tot=0;const has=()=>cur!==null||tot>0,flush=()=>{if(has()){o.push(String(tot+(cur||0)));cur=null;tot=0}};
+for(const x of s.split(/\s+/).filter(Boolean)){const l=x.toLowerCase().split(',').join('');
+if(l in NW)cur=(cur||0)+NW[l];else if(/^\d+(\.\d+)?k?$/.test(l)){flush();cur=parseFloat(l)*(l.endsWith('k')?1e3:1)}
+else if(l in NM&&has()){if(NM[l]===100)cur=(cur||1)*100;else{tot+=(cur||1)*NM[l];cur=null}}
+else if(l==='and'&&has())continue;else{flush();o.push(x)}}flush();return o.join(' ')}
+function voiceStart(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return toast('Voice input isn’t supported in this browser. Try Chrome 🎤');
+if(REC)try{REC.abort()}catch(e){}const r=new SR();REC=r;r.lang='en-IN';r.interimResults=true;r.maxAlternatives=1;let fin='',done=false;
+openSheet('<div style="text-align:center"><div class="pig" style="font-size:64px">🎤</div><h2>Listening…</h2><div class="mu" id="vh" style="margin:12px 0;min-height:22px">Try “lunch 150 upi”, “got 5000 salary” or “delete last entry”</div><button class="btn ghost" onclick="voiceStop()">Done</button></div>');
+r.onresult=e=>{let t='';for(const x of e.results)t+=x[0].transcript;fin=t;const h=$('#vh');if(h)h.textContent='“'+t+'”'};
+r.onerror=e=>{if(done)return;done=true;REC=null;if(e.error==='aborted')return;closeSheet();toast(e.error==='not-allowed'||e.error==='service-not-allowed'?'Allow microphone access to use voice 🎤':e.error==='no-speech'?'Didn’t hear anything. Try again 🎤':e.error==='network'?'Voice needs internet. Try typing instead':'Voice didn’t work. Try again 🎤')};
+r.onend=()=>{REC=null;if(done)return;done=true;if(!fin.trim()){closeSheet();return toast('Didn’t catch that. Try again 🎤')}voiceDo(fin)};
+try{r.start()}catch(e){REC=null;closeSheet();toast('Couldn’t start the mic')}}
+function voiceStop(){if(REC)try{REC.stop()}catch(e){}}
+function voiceDo(said){let w=said.toLowerCase().split('₹').join(' ').replace(/rs\.?(?=\d)/g,'').replace(/[?!,]/g,' ').replace(/\.(?!\d)/g,' ').split(/\s+/).filter(Boolean);
+while(w.length&&['please','hey','ok','okay'].includes(w[0]))w.shift();
+if(w.length&&VDEL.includes(w[0]))return voiceDel(w.slice(1),said);
+let cr=w.some(x=>VCR.includes(x))||w[0]==='plus';w=w.filter((x,i)=>!VCR.includes(x)&&!(i===0&&x==='plus'));
+w=w.filter((x,i)=>!(VVIA.includes(x)&&PM.some(p=>p.toLowerCase()===w[i+1])));
+w=vNums(w.filter(x=>!VSTOP.has(x)).join(' ')).split(' ').map(x=>x.replace(/^₹/,'')).filter(Boolean);
+const ns=w.filter(x=>/^\d+(\.\d+)?$/.test(x));if(!ns.length){closeSheet();return toast('Heard “'+said+'” but no amount. Try “lunch 150” 🎤')}
+const big=ns.reduce((a,b)=>+b>+a?b:a);let kept=false;w=w.filter(x=>{if(!/^\d+(\.\d+)?$/.test(x))return true;if(x===big&&!kept){kept=true;return true}return false});
+qtAdd((cr?'+':'')+w.join(' '))}
+function voiceDel(w,said){const skip=['last','entry','expense','transaction','that','it','previous','latest','my','one','recent','the','a','of','for','on','rupees','rupee','rs','spend','spent'];
+const t=vNums(w.filter(x=>!skip.includes(x)).join(' ')).split(' ').map(x=>x.replace(/^₹/,'')).filter(Boolean),amt=t.filter(x=>/^\d+(\.\d+)?$/.test(x)).map(Number),txt=t.filter(x=>!/^\d/.test(x));
+if(!S.tx.length){closeSheet();return toast('Nothing to delete yet 👀')}
+let e;if(!amt.length&&!txt.length)e=S.tx[S.tx.length-1];
+else e=S.tx.slice().sort((a,b)=>b.ts-a.ts).find(x=>(!amt.length||amt.some(a=>Math.abs(a-x.amt)<.5))&&txt.every(k=>((x.reason||'')+' '+x.cat).toLowerCase().includes(k)));
+if(!e){closeSheet();return toast('Couldn’t find an entry matching “'+said+'” 🔍')}
+openSheet('<h2>Delete this entry?</h2><div class="mu" style="margin:6px 0 4px">You said “'+esc(said)+'”</div>'+entRow(e)+'<button class="btn red" style="margin-top:14px" onclick="delEntry(\''+e.id+'\')">Delete 💨</button><button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Keep it</button>')}
+function streak(){const days=new Set(S.tx.map(t=>dkey(new Date(t.ts))));let d=new Date(),n=0;if(!days.has(dkey(d)))d.setDate(d.getDate()-1);while(days.has(dkey(d))){n++;d.setDate(d.getDate()-1)}return n}
+const BADGES=[[30,'Budget Legend 👑'],[7,'Money Nerd 🔥'],[3,'Warm-up 🌱']];
+function streakCard(){const n=streak(),b=BADGES.find(x=>n>=x[0]);return`<div class="card row sp"><div><b>${n?n+'-day streak 🔥':'No streak yet'}</b><div class="mu">${b?b[1]+' unlocked':'Log something every day to start one'}</div></div><button class="chip on" onclick="wrapped()">Wrapped ✨</button></div>`}
+function wrapped(){const a=S.tx.filter(t=>inM(t,M)&&t.type==='db'&&!t.xf);if(!a.length)return toast('Log some spending first, then your Wrapped shows up 👀');
+const tot=a.reduce((s,t)=>s+t.amt,0),cats=byCat(a),top=cats[0],days={};a.forEach(t=>{const k=new Date(t.ts).getDate();days[k]=(days[k]||0)+t.amt});const dk=Object.entries(days).sort((x,y)=>y[1]-x[1])[0];
+const late=a.filter(t=>{const h=new Date(t.ts).getHours();return h>=22||h<4}).length>a.length/2,chai=a.some(t=>/chai|tea|coffee/i.test(t.reason));
+const T={Food:'Snack Legend 🍕',Travel:'Road Warrior 🚌',Shopping:'Cart Champion 🛍️',Bills:'Responsible Adult 💡',Health:'Wellness Warrior 💊'};
+const title=late?'Midnight Snack Legend 🌙':chai?'Chai Connoisseur ☕':T[top[0]]||(top[0]==='Other'?'Mystery Spender ✨':top[0]+' Enthusiast '+cat(top[0])[1]);
+const mn=M.toLocaleString('en',{month:'long'}),yr=M.getFullYear(),pm=new Date(yr,M.getMonth()-1,1),pt=sum(S.tx.filter(t=>inM(t,pm)),'db'),st=streak(),bd=BADGES.find(x=>st>=x[0]);
+const dl={gentle:'A busy day for your wallet.',spicy:'Your wallet needed a hug that day 🫂',unhinged:'What happened?! We need answers. And a receipt. 🕵️'}[S.sass]||'';
+const share=`My ${mn} Wrapped: ${title} • top category ${top[0]} ${cat(top[0])[1]} • ${a.length} entries logged 💸`;
+const G=['#8b5cf6,#ff4fa3','#ff9f43,#ff4fa3','#4cc9f0,#8b5cf6','#34d399,#4cc9f0','#ff4fa3,#ff9f43','#8b5cf6,#4cc9f0'];
+const sl=[`<div class="pig">${logo(96)}</div><div class="n">${mn}</div><h2>Your ${yr} spending story</h2><p>Swipe →</p>`,
+`<p>You spent</p><div class="n">${money(tot)}</div><p>across ${a.length} entries</p><p>${pt?(tot<pt?'Less than last month. Main character energy ✨':'More than last month. Hmm 👀'):'First month on record 🎉'}</p>`,
+`<p>Your top category</p><div class="e">${cat(top[0])[1]}</div><div class="n">${top[0]}</div><p>${money(top[1])} • ${Math.round(top[1]/tot*100)}% of spending</p>`,
+`<p>Your most dramatic day</p><div class="n">${dk[0]} ${mn.slice(0,3)}</div><p>${money(dk[1])} gone in one day</p><p>${dl}</p>`,
+`<p>This month you were a</p><div class="n" style="font-size:44px">${title}</div><p>${st?st+'-day logging streak 🔥':'Start a streak next month 🔥'}${bd?' • '+bd[1]:''}</p>`,
+`<div class="e">📲</div><h2>Flex it or cry together</h2><p>Names and amounts stay hidden.</p><button class="btn" id="wsh">Share</button><button class="btn" style="background:none;color:#fff" onclick="document.getElementById('wr').remove()">Close</button>`];
+const w=document.createElement('div');w.id='wr';w.innerHTML=`<button class="wx" onclick="document.getElementById('wr').remove()" aria-label="Close">✕</button><div class="wrs">${sl.map((h,i)=>`<div class="wc" style="background:linear-gradient(160deg,${G[i]})">${h}</div>`).join('')}</div>`;document.body.appendChild(w);
+w.querySelector('#wsh').onclick=async()=>{try{if(navigator.share)await navigator.share({text:share});else{await navigator.clipboard.writeText(share);toast('Copied! Paste it anywhere 📋')}}catch(e){toast('Couldn’t share. Copy this: '+share)}}}
+function render(){document.documentElement.dataset.theme=S.theme;const v={home,activity,reports,more:moreTab,split:splitTab}[tab];$('#main').innerHTML=v();$('#fab').style.display=$('#mic').style.display=tab==='home'||tab==='activity'?'block':'none';$('#nav').innerHTML=[['home','🏠','Home'],['activity','📅','Activity'],['split','🤝','Split'],['reports','📊','Reports'],['more','⚙️','More']].map(t=>`<button class="${tab===t[0]?'on':''}" onclick="setTab('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}
+S.cats.forEach(c=>{if(c[0]==='Travel'&&c[1].indexOf('\u2708')===0)c[1]='🚌'});syncCats();const rk=runRt();render();if(S.pin)lockNow();if(rk)setTimeout(()=>toast(rk+' routine entr'+(rk>1?'ies':'y')+' added 🚌'),500);const am=alertMsg();if(am&&S.ad!==dkey(new Date())){S.ad=dkey(new Date());save();setTimeout(()=>toast(am),3600)}
+if(!S.name&&!S.ws)welcome();
+</script>
+<script id="smsmod">
+(function(){
+const AM=/(?:rs\.?|inr|₹)\s*([\d,]+(?:\.\d+)?)/i,BL=/\bbal(?:ance)?\b\.?\s*(?:is|:)?\s*(?:rs\.?|inr|₹)?\s*(-?[\d,]+(?:\.\d+)?)/i,
+DK=['debited','withdrawn','to transfer','purchase','spent','deducted','paid to'],CK=['credited','by transfer','deposited','received','refund','reversed'],
+at=(l,a)=>Math.min(...a.map(k=>{const i=l.indexOf(k);return i<0?1e9:i})),NUM=s=>parseFloat(String(s).replace(/,/g,'')),
+hs=s=>{let h=5381;for(const c of s)h=(h*33^c.charCodeAt(0))>>>0;return h.toString(36)+s.length},
+P=()=>{const C=window.Capacitor;if(!C)return;return P.c||(P.c=(C.Plugins&&C.Plugins.BankSms)||(C.isNativePlatform&&C.isNativePlatform()&&C.registerPlugin?C.registerPlugin('BankSms'):undefined))};
+function merch(t,type){const bad=/^(a\/c|account|acct|your|you|card|bank|self|transfer|the|vpa)\b/i,v=t.match(/\bVPA\s+([\w.\-]+)@/i);
+const re=new RegExp('\\b(?:'+(type==='db'?'at|to|towards':'from|by')+')\\s+([A-Za-z][A-Za-z0-9&.\' -]{2,30}?)(?=\\s+(?:on|via|ref|upi|bal|avl|available|using|vpa|txn|info)\\b|[.,;]|$)','gi');let m;
+while((m=re.exec(t))){const n=m[1].trim();if(!bad.test(n))return n.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())}
+return v?v[1]:''}
+function parse(raw,rcv){
+const t=String(raw||'').replace(/\s+/g,' ').trim(),l=t.toLowerCase();
+if(/\botp\b|one.?time pass|\bpin\b/.test(l)||(/failed|declined|unsuccessful/.test(l)&&!/revers|refund/.test(l)))return null;
+if(!/a\/c|account|acct|card/.test(l))return null;
+const d=at(l,DK),c=at(l,CK);if(d>=1e9&&c>=1e9)return null;
+const type=d<c?'db':'cr',bm=t.match(BL),t2=bm?t.replace(bm[0],' '):t,am=t2.match(AM);if(!am)return null;
+const dm=t.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})/),tm=t.match(/\b(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+let ts=rcv||Date.now();
+if(dm){let y=+dm[3];if(y<100)y+=2000;const n=new Date(y,dm[2]-1,+dm[1],tm?+tm[1]:12,tm?+tm[2]:0,tm&&tm[3]?+tm[3]:0).getTime();
+if(tm)ts=n;else{const r=new Date(rcv||Date.now());ts=dkey(r)===dkey(new Date(n))?r.getTime():n}}
+const ac=(t.match(/(?:a\/c|account|acct|card)\b[^\d]{0,20}?\d*?(\d{4})\b/i)||[])[1]||'',rf=t.match(/ref\.?\s*(?:no\.?)?\s*:?\s*(\d{6,})/i),to=t.match(/credited to a\/c(?: no\.?)? [xX*]*(\d{4})/i),inf=t.match(/info:?\s*(.+?)\.?$/i);
+let reason='Bank transfer';
+if(inf)reason=inf[1].replace(/\b[A-Z]{4}0\w{6}\b/g,'').replace(/\d{6,}/g,'').replace(/\b(jrgb|jgb)\b\.?/ig,'').replace(/\s+/g,' ').trim()||reason;
+else if(to)reason='UPI to a/c ..'+to[1];
+else{const mm=merch(t,type);if(mm)reason=mm}
+return{type,amt:NUM(am[1]),ts,ac,kind:(tm||bm)?'T':'U',ref:rf?rf[1]:'',bal:bm?NUM(bm[1]):null,reason,pm:/upi/.test(l)?'UPI':'Bank'}}
+function add(raw,rcv){
+const p=parse(raw,rcv);if(!p)return'skip';
+const m=S.sms=S.sms||{seen:{},bal:null},h=hs(String(raw).toLowerCase().replace(/[^a-z0-9]/g,''));
+if(m.seen[h])return'dup';m.seen[h]=1;
+if(p.ref&&S.tx.some(x=>x.ref===p.ref))return'dup';
+if(p.bal!=null&&(!m.bal||p.ts>=m.bal.ts))m.bal={v:p.bal,ts:p.ts,ac:p.ac};
+const k=S.tx.filter(x=>x.sms&&x.type===p.type&&x.amt===p.amt&&(x.ac||'')===p.ac&&x.sk.length===1&&x.sk[0]!==p.kind&&dkey(new Date(x.ts))===dkey(new Date(p.ts))).sort((a,b)=>Math.abs(a.ts-p.ts)-Math.abs(b.ts-p.ts))[0];
+if(k){if(p.kind==='T')k.ts=p.ts;if(p.bal!=null)k.bal=p.bal;if(p.ref)k.ref=p.ref;if(k.reason==='Bank transfer')k.reason=p.reason;k.sk.push(p.kind);return'merged'}
+const lw=' '+p.reason.toLowerCase()+' ';let c=p.type==='cr'?'Salary':'Other';
+if(p.type==='db'){const e=Object.entries(KW).find(([n,w])=>w.split(' ').some(x=>lw.includes(' '+x)));if(e&&CATS.some(x=>x[0]===e[0]))c=e[0]}
+S.tx.push({id:uid(),type:p.type,amt:p.amt,cat:c,reason:p.reason,ts:p.ts,pm:p.pm,sms:1,ac:p.ac,sk:[p.kind],ref:p.ref,bal:p.bal});return'new'}
+function run(items,quiet){let n=0,mg=0,last;items.forEach(i=>{const r=add(i.body,i.ts);if(r==='new'){n++;last=i}if(r==='merged')mg++});
+if(n||mg){save();render()}
+if(!quiet){if(n===1&&!mg){const x=S.tx.find(t=>t.sms&&t.ts>=0&&t===S.tx[S.tx.length-1]);toast((x.type==='cr'?pick(CRE):pick(pool())).replace('{a}',money(x.amt)))}
+else if(n||mg)toast(n+' added'+(mg?', '+mg+' duplicate'+(mg>1?'s':'')+' merged 👯':'')+' 📩');else toast('Nothing new. Already counted or not a bank SMS.')}return n}
+window.onBankSms=(t,ts)=>run([{body:t,ts}]);
+window.smsPaste=()=>{const el=$('#smt'),v=el.value.trim();if(!v)return toast('Paste a bank SMS first');const n=v.split(/\n\s*\n|\n(?=your |dear |a\/c)/i).filter(Boolean).map(b=>({body:b}));run(n);el.value=''};
+async function drain(q){const p=P();if(!p)return;try{const r=await p.getPending();if(r.items&&r.items.length)run(r.items,q)}catch(e){}}
+window.smsImport=async()=>{const p=P();if(!p)return;try{await p.requestPermissions();const r=await p.readInbox({days:90});run(r.items||[])}catch(e){toast('SMS permission is needed first')}};
+window.smsCard=()=>{const b=(S.sms||{}).bal,n=S.tx.filter(t=>t.sms).length,nat=!!P();
+return`<div class="card"><h3>Bank SMS auto-track 📩</h3><div class="mu" style="margin:6px 0 10px">${nat?'Listening for bank SMS. Debits and credits add themselves, and the two messages your bank sends for one transfer count once.':'Auto-read works inside the Android APK. Here you can paste an SMS to test.'}</div>${b?`<div class="mini" style="margin-bottom:10px"><span class="mu">Bank balance (from SMS)</span><b>${S.cur}${b.v.toLocaleString('en-IN',{minimumFractionDigits:2})}</b></div>`:''}<textarea id="smt" rows="3" placeholder="Paste a bank SMS" style="width:100%"></textarea><button class="btn" style="margin-top:10px" onclick="smsPaste()">Add from SMS</button>${nat?'<button class="btn ghost" style="margin-top:10px" onclick="smsImport()">Import last 90 days</button>':''}<div class="mu" style="margin-top:8px">${n} entries from SMS</div></div>`};
+const p=P();if(p){p.addListener('sms',()=>drain());p.requestPermissions().catch(()=>{}).then(()=>drain(true));document.addEventListener('visibilitychange',()=>{if(!document.hidden)drain(true)})}
+})();
+</script>
+<script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>
+</body>
+</html>
