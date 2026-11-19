@@ -21,3 +21,14 @@ rcv = ('<receiver android:name="%s.BankSmsPlugin$Rx" android:exported="true" and
 x = x.replace('<application', perms + '<application', 1).replace('</application>', rcv, 1)
 open(p, 'w').write(x)
 print('SMS plugin added for', app)
+
+# --- Pockit app icon ---
+import glob, shutil
+src_icon = 'www/icon-512.png'
+for f in glob.glob('android/app/src/main/res/mipmap-*/ic_launcher*.png'):
+    shutil.copyfile(src_icon, f)
+for f in glob.glob('android/app/src/main/res/mipmap-anydpi-v26/*.xml'):
+    os.remove(f)
+for f in glob.glob('android/app/src/main/res/drawable*/ic_launcher_foreground*'):
+    os.remove(f)
+print('Pockit icon applied')
